@@ -38,12 +38,7 @@ class CurrencyConverter:
             return json.dumps(data, indent=4)
 
 
-def validate_inputs():
-    pass
-
-
-oh = InputHandler()
-oh.args_parser()
-JsonHandler().get_rates()
-cc = CurrencyConverter()
-print(cc.convert())
+if __name__ == "__main__":
+    JsonHandler().get_rates()
+    cc = CurrencyConverter()
+    print(cc.convert())

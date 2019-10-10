@@ -26,6 +26,26 @@ class InputHandler:
             "Rp": ["IDR"],
             "₪": ["ILS"],
             "₹": ["INR"],
+            "JD": ["JOD"],
+            "som": ["KGS", "UZS"],
+            "₩": ["KRW"],
+            "K.D.": ["KWD"],
+            "₸": ["KZT"],
+            "RM": ["MYR"],
+            ".ر.ع": ["OMR"],
+            "S/.": ["PEN"],
+            "₱": ["PHP"],
+            "zł": ["PLN"],
+            "QR": ["QAR"],
+            "lei": ["RON"],
+            "din.": ["RSD"],
+            "p.": ["RUB"],
+            "SR": ["SAR"],
+            "฿": ["THB"],
+            "TL": ["TRY"],
+            "NT$": ["TWD"],
+            "﷼": ["YER"],
+            "R": ["ZAR"]
         }
 
     def args_parser(self):
@@ -51,7 +71,6 @@ class InputHandler:
 
         self.input_validator()
         self.output_validator()
-        # print("get_currencies_list", self.get_currencies_list())
 
     def print_inputs(self):
         print(self.args.amount)
@@ -65,7 +84,6 @@ class InputHandler:
                     if self.args.input == currency[country]:
                         self.input_currency = self.args.input
         elif self.args.input in self.supported_currencies.keys():
-            # print("self.args.input", self.args.input)
             self.input_currency = self.supported_currencies[self.args.input][0]
         else:
             print("currency not supported")
