@@ -11,6 +11,7 @@ from input_handler import InputHandler
 import json_handler
 
 supported_currencies = {
+    
     "Kč": ["CZK"],
     "€": ["EUR"],
     "$": ["USD", "CAD", "AUD", "NZD", "SGD", "MXN", "CLP"],
