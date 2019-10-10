@@ -35,43 +35,46 @@ class InputHandler:
         input_parser.add_argument(
             "--input",
             "--input_currency",
+            type=str,
             required=True,
             help="currency code you want to exchange",
         )
         input_parser.add_argument(
-            "--output", "--output_currency", help="currency code you want to get"
+            "--output",
+            "--output_currency",
+            type=str,
+            help="currency code you want to get"
         )
         self.args = input_parser.parse_args()
         self.amount = self.args.amount
-        self.input_currency = self.args.input
-        self.output_currency = self.args.output
 
-        self.get_input()
-        self.get_output()
+        self.input_validator()
+        self.output_validator()
+
+    def print_inputs(self):
+        print(self.args.amount)
+        print(self.args.input == "EUR")
+        print(self.args.output)
 
     def input_validator(self):
-        for currency in self.supported_currency.values():
-            if len(currency) > 1:
-                for country in currency:
-                    if self.input_currency is country:
-                        return self.input_currency
-            else:
-                if self.input_currency is currency[0]:
-                    return self.input_currency
+        if len(self.args.input) == 3:
+            for currency in self.supported_currency.values():
+                for country in range(len(currency)):
+                    # print("input value", currency[country])
+                    if self.args.input == currency[country]:
+                        self.input_currency = self.args.input
+                        # print("self.input_currency", self.input_currency)
         else:
             print("currency not supported")
 
     def output_validator(self):
-        for currency in self.supported_currency.values():
-            if len(currency) > 1:
-                for country in currency:
-                    # print(country)
-                    if self.output_currency is country:
-                        return self.output_currency
-            else:
-                print(currency[0] is str(self.output_currency))
-                if self.output_currency is currency[0]:
-                    return self.output_currency
+        if len(self.args.output) == 3:
+            for currency in self.supported_currency.values():
+                for country in range(len(currency)):
+                    # print("output value", currency[country])
+                    if self.args.output == currency[country]:
+                        self.output_currency = self.args.output
+                        # print("self.output_currency", self.output_currency)
         else:
             print("currency not supported")
 
@@ -79,9 +82,7 @@ class InputHandler:
         return self.amount
 
     def get_input(self):
-        self.input_validator()
         return self.input_currency
 
     def get_output(self):
-        self.output_validator()
         return self.output_currency

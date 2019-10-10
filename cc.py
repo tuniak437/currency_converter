@@ -35,20 +35,24 @@ supported_currencies = {
 class CurrencyConverter:
     def __init__(self):
         self.rates = JsonHandler().rates
-        self.inputs = InputHandler()
+        ih = InputHandler()
+        ih.args_parser()
+        self.input = ih.get_input()
+        self.output = ih.get_output()
+        self.amount = ih.get_amount()
 
     def convert(self):
         ans = (
-            self.inputs.get_amount()
-            / self.rates[self.inputs.get_input()]
-            * self.rates[self.inputs.get_output()]
+            self.amount
+            / self.rates[self.input]
+            * self.rates[self.output]
         )
         data = {
             "input": {
-                "amount": self.inputs.get_amount(),
-                "currency": self.inputs.get_input(),
+                "amount": self.amount,
+                "currency": self.input,
             },
-            "output": {self.inputs.get_output(): f"{ans:.2f}"},
+            "output": {self.output: f"{ans:.2f}"},
         }
 
         return json.dumps(data, indent=4)
@@ -58,8 +62,8 @@ def validate_inputs():
     pass
 
 
-oh = InputHandler()
-oh.args_parser()
+# oh = InputHandler()
+# oh.args_parser()
 JsonHandler().get_rates()
 cc = CurrencyConverter()
 print(cc.convert())
