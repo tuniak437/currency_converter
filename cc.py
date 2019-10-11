@@ -56,7 +56,9 @@ if __name__ == "__main__":
     # pass
     ih = InputHandler()
     ih.args_parser()
-    app = Flask(__name__)
-    JsonHandler().get_rates()
+    # app = Flask(__name__)
+
+    # JsonHandler().get_rates()
     cc = CurrencyConverter()
+    # print(cc.rates)
     print(cc.convert())
