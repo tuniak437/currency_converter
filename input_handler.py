@@ -1,5 +1,8 @@
 import argparse
 
+# todo - create route get methods
+# todo - find a way to use args
+
 
 class InputHandler:
     def __init__(self):
@@ -8,7 +11,7 @@ class InputHandler:
         self.input_currency = None
         self.output_currency = None
         self.currencies_list = None
-        self.supported_currencies = {
+        self.supp_curr = {
             "Kč": ["CZK"],
             "€": ["EUR"],
             "$": ["USD", "CAD", "AUD", "NZD", "SGD", "MXN", "CLP"],
@@ -45,7 +48,7 @@ class InputHandler:
             "TL": ["TRY"],
             "NT$": ["TWD"],
             "﷼": ["YER"],
-            "R": ["ZAR"]
+            "R": ["ZAR"],
         }
 
     def args_parser(self):
@@ -64,7 +67,7 @@ class InputHandler:
             "--output",
             "--output_currency",
             type=str,
-            help="currency code you want to get"
+            help="currency code you want to get",
         )
         self.args = input_parser.parse_args()
         self.amount = self.args.amount
@@ -72,29 +75,32 @@ class InputHandler:
         self.input_validator()
         self.output_validator()
 
-    def print_inputs(self):
-        print(self.args.amount)
-        print(self.args.input == "EUR")
-        print(self.args.output)
-
     def input_validator(self):
         if len(self.args.input) == 3:
-            for currency in self.supported_currencies.values():
+            for currency in self.supp_curr.values():
                 for country in range(len(currency)):
                     if self.args.input == currency[country]:
                         self.input_currency = self.args.input
-        elif self.args.input in self.supported_currencies.keys():
-            self.input_currency = self.supported_currencies[self.args.input][0]
+        elif self.args.input in self.supp_curr.keys():
+            if len(self.supp_curr[self.args.input]) > 1:
+                self.input_currency = input(
+                    f"more currencies under {self.args.input} available, pick one {list(self.supp_curr[self.args.input])}\n"
+                )
+            else:
+                self.input_currency = self.supp_curr[self.args.input][0]
         else:
-            print("currency not supported")
+            print("currency is not supported")
 
     def output_validator(self):
-        for currency in self.supported_currencies.values():
-            for country in range(len(currency)):
-                if self.args.output == currency[country]:
-                    self.output_currency = self.args.output
-        if self.args.output in self.supported_currencies.keys():
-            self.output_currency = self.supported_currencies[self.args.output][0]
+        if self.args.output in self.get_currencies_list():
+            self.output_currency = self.args.output
+        elif self.args.output in self.supp_curr.keys():
+            if len(self.supp_curr[self.args.output]) > 1:
+                self.output_currency = input(
+                    f"more currencies under {self.args.output} available, pick one {list(self.supp_curr[self.args.output])}\n"
+                )
+            else:
+                self.output_currency = self.supp_curr[self.args.output][0]
         else:
             self.output_currency = None
 
@@ -109,7 +115,7 @@ class InputHandler:
 
     def get_currencies_list(self):
         currencies_list = []
-        for currency in self.supported_currencies.values():
+        for currency in self.supp_curr.values():
             for country in range(len(currency)):
                 currencies_list.append(currency[country])
         return currencies_list
