@@ -1,7 +1,4 @@
 import json
-
-from flask import request, Flask
-
 from json_handler import JsonHandler
 from input_handler import InputHandler
 from decimal import *

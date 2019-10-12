@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d9e8238-6ef7-40be-8f50-be4b9f4f450b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cc_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cc.py" beforeDir="false" afterPath="$PROJECT_DIR$/cc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/input_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/json_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/json_handler.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
