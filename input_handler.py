@@ -1,13 +1,15 @@
 import argparse
 
+# todo - create route get methods
+# todo - find a way to use args
+
 
 class InputHandler:
     def __init__(self):
-        self.args = None
         self.amount = None
         self.input_currency = None
         self.output_currency = None
-        self.supported_currency = {
+        self.supp_curr = {
             "Kč": ["CZK"],
             "€": ["EUR"],
             "$": ["USD", "CAD", "AUD", "NZD", "SGD", "MXN", "CLP"],
@@ -25,6 +27,26 @@ class InputHandler:
             "Rp": ["IDR"],
             "₪": ["ILS"],
             "₹": ["INR"],
+            "JD": ["JOD"],
+            "som": ["KGS", "UZS"],
+            "₩": ["KRW"],
+            "K.D.": ["KWD"],
+            "₸": ["KZT"],
+            "RM": ["MYR"],
+            ".ر.ع": ["OMR"],
+            "S/.": ["PEN"],
+            "₱": ["PHP"],
+            "zł": ["PLN"],
+            "QR": ["QAR"],
+            "lei": ["RON"],
+            "din.": ["RSD"],
+            "p.": ["RUB"],
+            "SR": ["SAR"],
+            "฿": ["THB"],
+            "TL": ["TRY"],
+            "NT$": ["TWD"],
+            "﷼": ["YER"],
+            "R": ["ZAR"],
         }
 
     def args_parser(self):
@@ -35,53 +57,58 @@ class InputHandler:
         input_parser.add_argument(
             "--input",
             "--input_currency",
+            type=str,
             required=True,
             help="currency code you want to exchange",
         )
         input_parser.add_argument(
-            "--output", "--output_currency", help="currency code you want to get"
+            "--output",
+            "--output_currency",
+            type=str,
+            help="currency code you want to get",
         )
-        self.args = input_parser.parse_args()
-        self.amount = self.args.amount
-        self.input_currency = self.args.input
-        self.output_currency = self.args.output
+        args = input_parser.parse_args()
+        self.amount = args.amount
+        self.input_currency = self.find_currency(args.input)
+        self.output_validator(args.output)
 
-        self.get_input()
-        self.get_output()
-
-    def input_validator(self):
-        for currency in self.supported_currency.values():
-            if len(currency) > 1:
-                for country in currency:
-                    if self.input_currency is country:
-                        return self.input_currency
-            else:
-                if self.input_currency is currency[0]:
-                    return self.input_currency
+    def output_validator(self, arg):
+        if arg is None:
+            self.output_currency = None
         else:
-            print("currency not supported")
+            self.output_currency = self.find_currency(arg)
 
-    def output_validator(self):
-        for currency in self.supported_currency.values():
-            if len(currency) > 1:
-                for country in currency:
-                    # print(country)
-                    if self.output_currency is country:
-                        return self.output_currency
+    def find_currency(self, arg):
+        if arg in self.supp_curr.values():
+            return arg
+        elif arg in self.supp_curr.keys():
+            if len(self.supp_curr[arg]) > 1:
+                arg = input(
+                    f"more currencies under {arg} available, pick one "
+                    f"{list(self.supp_curr[arg])}\n"
+                ).upper()
+                return arg
             else:
-                print(currency[0] is str(self.output_currency))
-                if self.output_currency is currency[0]:
-                    return self.output_currency
+                return self.supp_curr[arg][0]
         else:
-            print("currency not supported")
+            print("currency is not supported")
 
+    @property
     def get_amount(self):
         return self.amount
 
+    @property
     def get_input(self):
-        self.input_validator()
         return self.input_currency
 
+    @property
     def get_output(self):
-        self.output_validator()
         return self.output_currency
+
+    @property
+    def get_currencies_list(self):
+        currencies_list = []
+        for currency in self.supp_curr.values():
+            for country in range(len(currency)):
+                currencies_list.append(currency[country])
+        return currencies_list
