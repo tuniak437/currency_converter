@@ -6,11 +6,9 @@ import argparse
 
 class InputHandler:
     def __init__(self):
-        self.args = None
         self.amount = None
         self.input_currency = None
         self.output_currency = None
-        self.currencies_list = None
         self.supp_curr = {
             "Kč": ["CZK"],
             "€": ["EUR"],
@@ -69,52 +67,45 @@ class InputHandler:
             type=str,
             help="currency code you want to get",
         )
-        self.args = input_parser.parse_args()
-        self.amount = self.args.amount
+        args = input_parser.parse_args()
+        self.amount = args.amount
+        self.input_currency = self.find_currency(args.input)
+        self.output_validator(args.output)
 
-        self.input_validator()
-        self.output_validator()
+    def output_validator(self, arg):
+        if arg is None:
+            self.output_currency = None
+        else:
+            self.output_currency = self.find_currency(arg)
 
-    def input_validator(self):
-        if len(self.args.input) == 3:
-            for currency in self.supp_curr.values():
-                for country in range(len(currency)):
-                    if self.args.input == currency[country]:
-                        self.input_currency = self.args.input
-        elif self.args.input in self.supp_curr.keys():
-            if len(self.supp_curr[self.args.input]) > 1:
-                self.input_currency = input(
-                    f"more currencies under {self.args.input} available, pick one "
-                    f"{list(self.supp_curr[self.args.input])}\n"
-                )
+    def find_currency(self, arg):
+        if arg in self.supp_curr.values():
+            return arg
+        elif arg in self.supp_curr.keys():
+            if len(self.supp_curr[arg]) > 1:
+                arg = input(
+                    f"more currencies under {arg} available, pick one "
+                    f"{list(self.supp_curr[arg])}\n"
+                ).upper()
+                return arg
             else:
-                self.input_currency = self.supp_curr[self.args.input][0]
+                return self.supp_curr[arg][0]
         else:
             print("currency is not supported")
 
-    def output_validator(self):
-        if self.args.output in self.get_currencies_list():
-            self.output_currency = self.args.output
-        elif self.args.output in self.supp_curr.keys():
-            if len(self.supp_curr[self.args.output]) > 1:
-                self.output_currency = input(
-                    f"more currencies under {self.args.output} available, pick one "
-                    f"{list(self.supp_curr[self.args.output])}\n"
-                )
-            else:
-                self.output_currency = self.supp_curr[self.args.output][0]
-        else:
-            self.output_currency = None
-
+    @property
     def get_amount(self):
         return self.amount
 
+    @property
     def get_input(self):
         return self.input_currency
 
+    @property
     def get_output(self):
         return self.output_currency
 
+    @property
     def get_currencies_list(self):
         currencies_list = []
         for currency in self.supp_curr.values():

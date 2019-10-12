@@ -4,8 +4,6 @@ from _datetime import datetime
 
 
 class JsonHandler:
-    # def __init__(self):
-    #     self.rates = JsonHandler.get_latest_rates()
 
     @staticmethod
     def get_latest_rates():
@@ -29,6 +27,3 @@ class JsonHandler:
                 json_file = json.load(json_file)
 
             return json_file["rates"]
-
-    # def get_rates(self):
-    #     return self.rates

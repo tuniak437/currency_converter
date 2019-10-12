@@ -12,10 +12,10 @@ from decimal import *
 class CurrencyConverter:
     def __init__(self):
         self.rates = JsonHandler().get_latest_rates()
-        self.amount = ih.get_amount()
-        self.input = ih.get_input()
-        self.output = ih.get_output()
-        self.currencies = ih.get_currencies_list()
+        self.amount = ih.amount
+        self.input = ih.input_currency
+        self.output = ih.output_currency
+        self.currencies = ih.get_currencies_list
 
     # @app.route("/", methods=["GET"])
     # def currency_converter(self):
@@ -25,32 +25,41 @@ class CurrencyConverter:
     #     print(self.amount, self.input, self.output)
 
     def convert(self):
-        if self.output is not None:
-            # todo - decimal not fixed
-            ans = (
+        if self.output is None:
+            return self.convert_all_currencies()
+        else:
+            return self.convert_only_output()
+
+    def convert_only_output(self):
+        # todo - decimal not fixed
+        ans = (
                 Decimal(self.amount)
                 / Decimal(self.rates[self.input])
                 * Decimal(self.rates[self.output])
-            )
-            data = {
-                "input": {"amount": self.amount, "currency": self.input},
-                "output": {self.output: f"{ans:.2f}"},
-            }
-            return json.dumps(data, indent=4)
-        else:
-            temp_data = {}
-            for country in self.currencies:
-                ans = (
+        )
+        data = {
+            "input": {"amount": self.amount, "currency": self.input},
+            "output": {self.output: f"{ans:.2f}"},
+        }
+        return json.dumps(data, indent=4)
+
+    def convert_all_currencies(self):
+        temp_data = {}
+        for country in self.currencies:
+            if self.input == country:
+                continue
+            ans = (
                     Decimal(self.amount)
                     / Decimal(self.rates[self.input])
                     * Decimal(self.rates[country])
-                )
-                temp_data.update({country: f"{ans:.2f}"})
-            data = {
-                "input": {"amount": self.amount, "currency": self.input},
-                "output": temp_data,
-            }
-            return json.dumps(data, indent=4)
+            )
+            temp_data.update({country: f"{ans:.2f}"})
+
+        data = {
+            "input": {"amount": self.amount, "currency": self.input},
+            "output": temp_data,
+        }
+        return json.dumps(data, indent=4)
 
 
 if __name__ == "__main__":
