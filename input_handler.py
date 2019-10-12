@@ -93,19 +93,6 @@ class InputHandler:
         else:
             print("currency is not supported")
 
-    @property
-    def get_amount(self):
-        return self.amount
-
-    @property
-    def get_input(self):
-        return self.input_currency
-
-    @property
-    def get_output(self):
-        return self.output_currency
-
-    @property
     def get_currencies_list(self):
         currencies_list = []
         for currency in self.supp_curr.values():
