@@ -4,13 +4,11 @@ from _datetime import datetime
 
 
 class JsonHandler:
-    def __init__(self):
-        self.rates = JsonHandler.get_latest_rates()
+    # def __init__(self):
+    #     self.rates = JsonHandler.get_latest_rates()
 
-    # todo - fix class
-
-    @classmethod
-    def get_latest_rates(cls):
+    @staticmethod
+    def get_latest_rates():
         with open(
             "C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json"
         ) as json_file:
@@ -24,7 +22,7 @@ class JsonHandler:
             )
             parse_json = response.json()
 
-            with open("rates.json", "w") as json_file:
+            with open("C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json", "w") as json_file:
                 json.dump(parse_json, json_file)
 
             with open("C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json") as json_file:
@@ -32,6 +30,5 @@ class JsonHandler:
 
             return json_file["rates"]
 
-    def get_rates(self):
-        return self.rates
-
+    # def get_rates(self):
+    #     return self.rates

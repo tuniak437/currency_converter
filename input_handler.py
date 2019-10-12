@@ -84,7 +84,8 @@ class InputHandler:
         elif self.args.input in self.supp_curr.keys():
             if len(self.supp_curr[self.args.input]) > 1:
                 self.input_currency = input(
-                    f"more currencies under {self.args.input} available, pick one {list(self.supp_curr[self.args.input])}\n"
+                    f"more currencies under {self.args.input} available, pick one "
+                    f"{list(self.supp_curr[self.args.input])}\n"
                 )
             else:
                 self.input_currency = self.supp_curr[self.args.input][0]
@@ -97,7 +98,8 @@ class InputHandler:
         elif self.args.output in self.supp_curr.keys():
             if len(self.supp_curr[self.args.output]) > 1:
                 self.output_currency = input(
-                    f"more currencies under {self.args.output} available, pick one {list(self.supp_curr[self.args.output])}\n"
+                    f"more currencies under {self.args.output} available, pick one "
+                    f"{list(self.supp_curr[self.args.output])}\n"
                 )
             else:
                 self.output_currency = self.supp_curr[self.args.output][0]

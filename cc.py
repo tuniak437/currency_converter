@@ -11,7 +11,7 @@ from decimal import *
 
 class CurrencyConverter:
     def __init__(self):
-        self.rates = JsonHandler().rates
+        self.rates = JsonHandler().get_latest_rates()
         self.amount = ih.get_amount()
         self.input = ih.get_input()
         self.output = ih.get_output()
@@ -26,6 +26,7 @@ class CurrencyConverter:
 
     def convert(self):
         if self.output is not None:
+            # todo - decimal not fixed
             ans = (
                 Decimal(self.amount)
                 / Decimal(self.rates[self.input])
@@ -57,8 +58,5 @@ if __name__ == "__main__":
     ih = InputHandler()
     ih.args_parser()
     # app = Flask(__name__)
-
-    # JsonHandler().get_rates()
     cc = CurrencyConverter()
-    # print(cc.rates)
     print(cc.convert())
