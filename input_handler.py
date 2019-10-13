@@ -1,8 +1,5 @@
 import argparse
 
-# todo - create route get methods
-# todo - find a way to use args
-
 
 class InputHandler:
     def __init__(self):
@@ -72,26 +69,27 @@ class InputHandler:
         self.input_currency = self.find_currency(args.input)
         self.output_validator(args.output)
 
-    def output_validator(self, arg):
+    def output_validator(self, arg=None):
         if arg is None:
             self.output_currency = None
         else:
             self.output_currency = self.find_currency(arg)
 
     def find_currency(self, arg):
-        if arg in self.supp_curr.values():
+        if arg in self.get_currencies_list():
             return arg
         elif arg in self.supp_curr.keys():
             if len(self.supp_curr[arg]) > 1:
-                arg = input(
+                inp = input(
                     f"more currencies under {arg} available, pick one "
                     f"{list(self.supp_curr[arg])}\n"
-                ).upper()
-                return arg
+                )
+                return inp.upper()
             else:
                 return self.supp_curr[arg][0]
         else:
-            print("currency is not supported")
+            # todo - add exception (Wrong input)
+            return None
 
     def get_currencies_list(self):
         currencies_list = []

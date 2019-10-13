@@ -2,6 +2,8 @@ import requests
 import json
 from _datetime import datetime
 
+# todo - handling response (try)
+
 
 class JsonHandler:
 

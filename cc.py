@@ -4,6 +4,8 @@ from input_handler import InputHandler
 from decimal import *
 
 # TODO - handle HTTP requests
+# TODO - documentation
+# TODO - refactor, refactor, refactor
 
 
 class CurrencyConverter:
@@ -15,14 +17,13 @@ class CurrencyConverter:
         if output_curr is None:
             return self.convert_all_currencies(amount, input_curr)
         else:
-            return self.convert_only_output(amount, input_curr, output_curr)
+            return self.convert_to_output(amount, input_curr, output_curr)
 
-    def convert_only_output(self, amount, input_curr, output_curr):
-        # todo - decimal not fixed
+    def convert_to_output(self, amount, input_curr, output_curr):
         ans = (
-                Decimal(amount)
-                / Decimal(self.rates[input_curr])
-                * Decimal(self.rates[output_curr])
+            Decimal(amount)
+            / Decimal(self.rates[input_curr])
+            * Decimal(self.rates[output_curr])
         )
         data = {
             "input": {"amount": amount, "currency": input_curr},
@@ -36,9 +37,9 @@ class CurrencyConverter:
             if input_curr == country:
                 continue
             ans = (
-                    Decimal(amount)
-                    / Decimal(self.rates[input_curr])
-                    * Decimal(self.rates[country])
+                Decimal(amount)
+                / Decimal(self.rates[input_curr])
+                * Decimal(self.rates[country])
             )
             temp_data.update({country: f"{ans:.2f}"})
 
