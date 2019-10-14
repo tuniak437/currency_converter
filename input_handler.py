@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 
 class InputHandler:
@@ -64,13 +65,15 @@ class InputHandler:
             type=str,
             help="currency code you want to get",
         )
+        # todo - handle wrong inputs
         args = input_parser.parse_args()
         self.amount = args.amount
         self.in_currency = self.find_currency(args.input)
         self.out_currency = self.output_validator(args.output)
 
-    def output_validator(self, arg=None):
-        if arg is None:
+    def output_validator(self, arg):
+        # if parsed argument is empty, API returns str="None"
+        if arg is None or arg == "None":
             return None
         else:
             return self.find_currency(arg)
@@ -88,8 +91,8 @@ class InputHandler:
             else:
                 return self.supp_curr[arg][0]
         else:
-            # todo - add exception (Wrong input)
-            return None
+            logging.error("ValueError - Entered currency is not supported.")
+            raise ValueError("Entered currency is not supported.")
 
     def get_currencies_list(self):
         currencies_list = []

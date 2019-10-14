@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from cc import CurrencyConverter
+
 app = Flask(__name__)
 
 
@@ -27,7 +28,7 @@ def error_handler():
 
 def raise_error(parameter):
     raise BadRequest(
-        f"Parameter '{parameter}' cannot be empty", 400, {"exit_code_number": 1}
+        f"parameter '{parameter}' cannot be empty", 400, {"exit_code_number": 1}
     )
 
 
@@ -37,7 +38,7 @@ def currency_converter():
     amount = float(request.args.get("amount"))
     input_curr = str(request.args.get("input_currency"))
     output_curr = str(request.args.get("output_currency"))
-
+    print(output_curr is "None")
     cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)

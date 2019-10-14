@@ -1,21 +1,31 @@
 import json
-
+import logging
 import pysnooper
 
 from json_handler import JsonHandler
 from input_handler import InputHandler
 from decimal import *
+from _datetime import datetime
 
 # TODO - handle HTTP requests
 # TODO - documentation
 # TODO - refactor, refactor, refactor
+
+# todo - better naming
+
+logging.basicConfig(
+    filename="cc.log",
+    filemode="a",
+    level=logging.ERROR,
+    format=f"%(asctime)s - %(message)s",
+    datefmt='%d-%b-%y %H:%M:%S'
+)
 
 
 class CurrencyConverter:
     def __init__(self):
         self.rates = JsonHandler().get_latest_rates()
         self.input_handler = InputHandler()
-        self.currencies = self.input_handler.get_currencies_list()
 
     def convert(self, amount, input_curr, output_curr=None):
         if output_curr is None:
@@ -37,16 +47,17 @@ class CurrencyConverter:
 
     def convert_all_currencies(self, amount, input_curr):
         temp_data = {}
-        for country in self.currencies:
-            # we don't need to calculate same currency in/out
-            if input_curr == country:
+        currencies_list = self.input_handler.get_currencies_list()
+        for currency in currencies_list:
+            # skipping iteration of currency we don't need to calculate
+            if input_curr == currency:
                 continue
             ans = (
                 Decimal(amount)
                 / Decimal(self.rates[input_curr])
-                * Decimal(self.rates[country])
+                * Decimal(self.rates[currency])
             )
-            temp_data.update({country: f"{ans:.2f}"})
+            temp_data.update({currency: f"{ans:.2f}"})
 
         data = {
             "input": {"amount": amount, "currency": input_curr},
@@ -58,4 +69,11 @@ class CurrencyConverter:
 if __name__ == "__main__":
     cc = CurrencyConverter()
     cc.input_handler.args_parser()
-    print(cc.convert(cc.input_handler.amount, cc.input_handler.in_currency, cc.input_handler.out_currency))
+    # todo - figure print method only for CLI app
+    print(
+        cc.convert(
+            cc.input_handler.amount,
+            cc.input_handler.in_currency,
+            cc.input_handler.out_currency,
+        )
+    )
