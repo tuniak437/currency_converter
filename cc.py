@@ -1,4 +1,7 @@
 import json
+
+import pysnooper
+
 from json_handler import JsonHandler
 from input_handler import InputHandler
 from decimal import *
@@ -11,7 +14,8 @@ from decimal import *
 class CurrencyConverter:
     def __init__(self):
         self.rates = JsonHandler().get_latest_rates()
-        self.currencies = None
+        self.input_handler = InputHandler()
+        self.currencies = self.input_handler.get_currencies_list()
 
     def convert(self, amount, input_curr, output_curr=None):
         if output_curr is None:
@@ -34,6 +38,7 @@ class CurrencyConverter:
     def convert_all_currencies(self, amount, input_curr):
         temp_data = {}
         for country in self.currencies:
+            # we don't need to calculate same currency in/out
             if input_curr == country:
                 continue
             ans = (
@@ -51,8 +56,6 @@ class CurrencyConverter:
 
 
 if __name__ == "__main__":
-    ih = InputHandler()
-    ih.args_parser()
     cc = CurrencyConverter()
-    cc.currencies = ih.get_currencies_list()
-    print(cc.convert(ih.amount, ih.input_currency, ih.output_currency))
+    cc.input_handler.args_parser()
+    print(cc.convert(cc.input_handler.amount, cc.input_handler.in_currency, cc.input_handler.out_currency))

@@ -4,8 +4,8 @@ import argparse
 class InputHandler:
     def __init__(self):
         self.amount = None
-        self.input_currency = None
-        self.output_currency = None
+        self.in_currency = None
+        self.out_currency = None
         self.supp_curr = {
             "Kč": ["CZK"],
             "€": ["EUR"],
@@ -66,14 +66,14 @@ class InputHandler:
         )
         args = input_parser.parse_args()
         self.amount = args.amount
-        self.input_currency = self.find_currency(args.input)
-        self.output_validator(args.output)
+        self.in_currency = self.find_currency(args.input)
+        self.out_currency = self.output_validator(args.output)
 
     def output_validator(self, arg=None):
         if arg is None:
-            self.output_currency = None
+            return None
         else:
-            self.output_currency = self.find_currency(arg)
+            return self.find_currency(arg)
 
     def find_currency(self, arg):
         if arg in self.get_currencies_list():

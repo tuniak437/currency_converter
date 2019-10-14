@@ -1,8 +1,5 @@
 from flask import Flask, request, jsonify
 from cc import CurrencyConverter
-import json
-from input_handler import InputHandler
-
 app = Flask(__name__)
 
 
@@ -40,11 +37,10 @@ def currency_converter():
     amount = float(request.args.get("amount"))
     input_curr = str(request.args.get("input_currency"))
     output_curr = str(request.args.get("output_currency"))
-    ih = InputHandler()
-    inp = ih.find_currency(input_curr)
-    out = ih.output_validator(output_curr)
+
     cc = CurrencyConverter()
-    cc.currencies = ih.get_currencies_list()
+    inp = cc.input_handler.find_currency(input_curr)
+    out = cc.input_handler.output_validator(output_curr)
     return cc.convert(amount, inp, out)
 
 
