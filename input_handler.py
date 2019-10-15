@@ -4,6 +4,8 @@ import sys
 
 
 class InputHandler:
+    """This class validates inputs provided by user"""
+
     def __init__(self):
         self.amount = None
         self.in_currency = None
@@ -79,20 +81,31 @@ class InputHandler:
             return self.find_currency(arg)
 
     def find_currency(self, arg):
+        # if currency is in list of supported currency codes
         if arg in self.get_currencies_list():
             return arg
+        # or in list of supported currency signs
         elif arg in self.supp_curr.keys():
+            # if currency sign has more than one currency code
             if len(self.supp_curr[arg]) > 1:
                 inp = input(
                     f"more currencies under {arg} available, pick one "
                     f"{list(self.supp_curr[arg])}\n"
                 )
-                return inp.upper()
+                if inp.upper() in self.supp_curr[arg]:
+                    return inp.upper()
+                # if user doesn't pick from offered list,
+                # program picks first currency code from the list
+                else:
+                    print(f"Choosing default currency code: {self.supp_curr[arg][0]}")
+                    return self.supp_curr[arg][0]
             else:
                 return self.supp_curr[arg][0]
         else:
             try:
-                raise ValueError(f"ValueError - Entered currency '{arg}' is not supported.")
+                raise ValueError(
+                    f"ValueError - Entered currency '{arg}' is not supported."
+                )
             except ValueError as e:
                 logging.error(e)
                 print(e)

@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/cc.py" beforeDir="false" afterPath="$PROJECT_DIR$/cc.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cc_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/cc_api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/input_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/input_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/json_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/json_handler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rates.json" beforeDir="false" afterPath="$PROJECT_DIR$/rates.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

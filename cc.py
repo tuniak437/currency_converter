@@ -1,13 +1,9 @@
 import json
 import logging
-import pysnooper
-
 from json_handler import JsonHandler
 from input_handler import InputHandler
 from decimal import *
-from _datetime import datetime
 
-# TODO - handle HTTP requests
 # TODO - documentation
 # TODO - refactor, refactor, refactor
 
@@ -70,5 +66,4 @@ if __name__ == "__main__":
     cc = CurrencyConverter()
     cc.input_handler.args_parser()
     args = cc.input_handler
-    # todo - figure print method only for CLI app
     print(cc.convert(args.amount, args.in_currency, args.out_currency))

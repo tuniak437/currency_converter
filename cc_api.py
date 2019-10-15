@@ -33,9 +33,7 @@ def raise_empty_parameter(parameter):
 
 
 def raise_wrong_input():
-    raise BadRequest(
-        "invalid or not supported parameter", 400, {"exit_code_number": 1}
-    )
+    raise BadRequest("invalid or not supported parameter", 400, {"exit_code_number": 1})
 
 
 def raise_wrong_type(amount):
@@ -46,6 +44,13 @@ def raise_wrong_type(amount):
 
 @app.route("/currency_converter", methods=["GET"])
 def currency_converter():
+    """
+    This function calls error_handler() function to check if all required
+    parameters are provided. Then the function checks if parameter
+    'amount' can be casted into float type.
+
+    :return: Calculated rates in JSON format
+    """
     error_handler()
     amount = request.args.get("amount")
     try:
@@ -56,12 +61,12 @@ def currency_converter():
     output_curr = str(request.args.get("output_currency"))
 
     try:
-        return parse_arguments(amount, input_curr, output_curr)
+        return parse_parameters(amount, input_curr, output_curr)
     except SystemExit:
         raise_wrong_input()
 
 
-def parse_arguments(amount, input_curr, output_curr):
+def parse_parameters(amount, input_curr, output_curr):
     cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)
