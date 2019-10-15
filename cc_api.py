@@ -21,23 +21,47 @@ def handle_bad_request(error):
 
 def error_handler():
     if not request.args.get("amount"):
-        raise_error("amount")
+        raise_empty_parameter("amount")
     elif not request.args.get("input_currency"):
-        raise_error("input_currency")
+        raise_empty_parameter("input_currency")
 
 
-def raise_error(parameter):
+def raise_empty_parameter(parameter):
     raise BadRequest(
         f"parameter '{parameter}' cannot be empty", 400, {"exit_code_number": 1}
+    )
+
+
+def raise_wrong_input():
+    raise BadRequest(
+        "invalid or not supported parameter", 400, {"exit_code_number": 1}
+    )
+
+
+def raise_wrong_type(amount):
+    raise BadRequest(
+        f"parameter 'amount' cannot be '{amount}'", 400, {"exit_code_number": 1}
     )
 
 
 @app.route("/currency_converter", methods=["GET"])
 def currency_converter():
     error_handler()
-    amount = float(request.args.get("amount"))
+    amount = request.args.get("amount")
+    try:
+        amount = float(amount)
+    except ValueError:
+        raise_wrong_type(amount)
     input_curr = str(request.args.get("input_currency"))
     output_curr = str(request.args.get("output_currency"))
+
+    try:
+        return parse_arguments(amount, input_curr, output_curr)
+    except SystemExit:
+        raise_wrong_input()
+
+
+def parse_arguments(amount, input_curr, output_curr):
     cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)

@@ -15,10 +15,10 @@ from _datetime import datetime
 
 logging.basicConfig(
     filename="C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\cc.log",
-    filemode="a",
+    filemode="w",
     level=logging.INFO,
     format=f"%(asctime)s - %(message)s",
-    datefmt='%d-%b-%y %H:%M:%S'
+    datefmt="%d-%b-%y %H:%M:%S",
 )
 
 
@@ -28,7 +28,7 @@ class CurrencyConverter:
         self.input_handler = InputHandler()
 
     def convert(self, amount, input_curr, output_curr=None):
-        if output_curr is None:
+        if output_curr is None or output_curr == "None":
             return self.convert_all_currencies(amount, input_curr)
         else:
             return self.convert_to_output(amount, input_curr, output_curr)
@@ -69,11 +69,6 @@ class CurrencyConverter:
 if __name__ == "__main__":
     cc = CurrencyConverter()
     cc.input_handler.args_parser()
+    args = cc.input_handler
     # todo - figure print method only for CLI app
-    print(
-        cc.convert(
-            cc.input_handler.amount,
-            cc.input_handler.in_currency,
-            cc.input_handler.out_currency,
-        )
-    )
+    print(cc.convert(args.amount, args.in_currency, args.out_currency))
