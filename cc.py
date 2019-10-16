@@ -3,14 +3,12 @@ import logging
 from json_handler import JsonHandler
 from input_handler import InputHandler
 from decimal import *
+import os
 
-# TODO - documentation
 # TODO - refactor, refactor, refactor
 
-# todo - better naming
-
 logging.basicConfig(
-    filename="C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\cc.log",
+    filename=os.path.dirname(__file__) + "/cc.log",
     filemode="w",
     level=logging.INFO,
     format=f"%(asctime)s - %(message)s",
@@ -24,6 +22,17 @@ class CurrencyConverter:
         self.input_handler = InputHandler()
 
     def convert(self, amount, input_curr, output_curr=None):
+        """
+        Based on parameters provided, the convert method determines
+        which method to call to convert entered currencies. If
+        'output_curr' is not provided, method will convert 'input_curr'
+        to every supported currency.
+
+        :param amount: Entered amount of currency user wants to convert
+        :param input_curr: Currency which is already in code format e.g."EUR"
+        :param output_curr: same format as 'input_curr' if provided
+        :return: calculated currencies in JSON format
+        """
         if output_curr is None or output_curr == "None":
             return self.convert_all_currencies(amount, input_curr)
         else:

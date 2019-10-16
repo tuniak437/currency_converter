@@ -3,13 +3,11 @@ import json
 from _datetime import datetime
 from requests import RequestException
 import logging
-
-# todo - handling response (try)
-# todo - split into more functions
-# todo - exception handling
+import os
 
 
 class JsonHandler:
+
     @staticmethod
     def get_latest_rates():
         """
@@ -34,9 +32,7 @@ class JsonHandler:
 
         :return: only "rates" part of the JSON
         """
-        with open(
-            "C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json"
-        ) as json_file:
+        with open(os.path.dirname(__file__) + "/rates.json") as json_file:
             json_file = json.load(json_file)
 
         # checking if our json file is up-to-date
@@ -46,15 +42,13 @@ class JsonHandler:
             try:
                 JsonHandler.request_and_save_data()
                 with open(
-                    "C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json"
+                    os.path.dirname(__file__) + "/rates.json"
                 ) as updated_json_file:
                     return json.load(updated_json_file)["rates"]
 
             except RequestException:
                 logging.error("Unable to get latest rates from 'http://data.fixer.io'")
-                with open(
-                    "C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json"
-                ) as json_file:
+                with open(os.path.dirname(__file__) + "/rates.json") as json_file:
                     old_json_file = json.load(json_file)
                     print(
                         "Unable to get latest rates. Using rates from:",
@@ -69,7 +63,5 @@ class JsonHandler:
         )
         parse_json = response.json()
 
-        with open(
-            "C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\rates.json", "w"
-        ) as json_file:
+        with open(os.path.dirname(__file__) + "/rates.json", "w") as json_file:
             json.dump(parse_json, json_file)
