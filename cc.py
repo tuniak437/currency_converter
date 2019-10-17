@@ -2,14 +2,14 @@ import json
 import logging
 from json_handler import JsonHandler
 from input_handler import InputHandler
-from decimal import *
+from decimal import Decimal
 import os
 
 # TODO - refactor, refactor, refactor
 
 logging.basicConfig(
     filename=os.path.dirname(__file__) + "/cc.log",
-    filemode="w",
+    filemode="a",
     level=logging.INFO,
     format=f"%(asctime)s - %(message)s",
     datefmt="%d-%b-%y %H:%M:%S",

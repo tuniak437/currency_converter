@@ -65,3 +65,5 @@ class JsonHandler:
 
         with open(os.path.dirname(__file__) + "/rates.json", "w") as json_file:
             json.dump(parse_json, json_file)
+        logging.info("New rates requested and saved successfully")
+

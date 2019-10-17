@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify
+import logging
+from flask import Flask, request
 from cc import CurrencyConverter
 
 app = Flask(__name__)
 
 
 class BadRequest(Exception):
-    def __init__(self, message, status=400, payload=None):
+    def __init__(self, message, status, payload=None):
         self.message = message
         self.status = status
         self.payload = payload
@@ -16,7 +17,7 @@ def handle_bad_request(error):
     payload = dict(error.payload or ())
     payload["error_message"] = error.message
     payload["status_code"] = error.status
-    return jsonify(payload), 400
+    return payload
 
 
 def error_handler():
@@ -26,20 +27,20 @@ def error_handler():
         raise_empty_parameter("input_currency")
 
 
-def raise_empty_parameter(parameter):
-    raise BadRequest(
-        f"parameter '{parameter}' cannot be empty", 400, {"exit_code_number": 1}
-    )
+def raise_empty_parameter(par):
+    logging.error(f"Parameter '{par}' empty")
+    raise BadRequest(f"parameter '{par}' cannot be empty", 400, {"exit_code_number": 1})
 
 
 def raise_wrong_input():
-    raise BadRequest("invalid or not supported parameter", 400, {"exit_code_number": 1})
+    # No need to log this error. Method find_currency in input_handler
+    # already logging ValueError exception.
+    raise BadRequest("Invalid or not supported parameter", 400, {"exit_code_number": 1})
 
 
 def raise_wrong_type(amount):
-    raise BadRequest(
-        f"parameter 'amount' cannot be '{amount}'", 400, {"exit_code_number": 1}
-    )
+    logging.error(f"Invalid value for parameter 'amount'={amount}")
+    raise BadRequest(f"parameter 'amount' cannot be '{amount}'", 400, {"exit_code_number": 1})
 
 
 @app.route("/currency_converter", methods=["GET"])
