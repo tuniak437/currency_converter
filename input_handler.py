@@ -73,17 +73,17 @@ class InputHandler:
         self.in_currency = self.find_currency(args.input)
         self.out_currency = self.output_validator(args.output)
 
-    def output_validator(self, arg):
+    def output_validator(self, arg: str):
         # if parsed argument is empty, API returns str "None"
         if arg is None or arg == "None":
             return None
         else:
             return self.find_currency(arg)
 
-    def find_currency(self, arg):
+    def find_currency(self, arg: str):
         # if currency is in list of supported currency codes
-        if arg in self.get_currencies_list():
-            return arg
+        if arg.upper() in self.get_currencies_list():
+            return arg.upper()
         # or in list of supported currency signs
         elif arg in self.supp_curr.keys():
             # if currency sign has more than one currency code
@@ -91,9 +91,9 @@ class InputHandler:
                 inp = input(
                     f"more currencies under {arg} available, pick one "
                     f"{list(self.supp_curr[arg])}\n"
-                )
-                if inp.upper() in self.supp_curr[arg]:
-                    return inp.upper()
+                ).upper()
+                if inp in self.supp_curr[arg]:
+                    return inp
                 # if user doesn't pick from offered list,
                 # program picks first currency code from the list
                 else:

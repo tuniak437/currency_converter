@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from cc import CurrencyConverter
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ def handle_bad_request(error):
     payload = dict(error.payload or ())
     payload["error_message"] = error.message
     payload["status_code"] = error.status
-    return payload
+    return jsonify(payload), 400
 
 
 def error_handler():
@@ -27,7 +27,7 @@ def error_handler():
         raise_empty_parameter("input_currency")
 
 
-def raise_empty_parameter(par):
+def raise_empty_parameter(par: str):
     logging.error(f"Parameter '{par}' empty")
     raise BadRequest(f"parameter '{par}' cannot be empty", 400, {"exit_code_number": 1})
 
@@ -38,7 +38,7 @@ def raise_wrong_input():
     raise BadRequest("Invalid or not supported parameter", 400, {"exit_code_number": 1})
 
 
-def raise_wrong_type(amount):
+def raise_wrong_type(amount: float):
     logging.error(f"Invalid value for parameter 'amount'={amount}")
     raise BadRequest(f"parameter 'amount' cannot be '{amount}'", 400, {"exit_code_number": 1})
 
@@ -67,7 +67,7 @@ def currency_converter():
         raise_wrong_input()
 
 
-def parse_parameters(amount, input_curr, output_curr):
+def parse_parameters(amount: float, input_curr: str, output_curr: str):
     cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)

@@ -5,8 +5,6 @@ from input_handler import InputHandler
 from decimal import Decimal
 import os
 
-# TODO - refactor, refactor, refactor
-
 logging.basicConfig(
     filename=os.path.dirname(__file__) + "/cc.log",
     filemode="a",
@@ -18,10 +16,10 @@ logging.basicConfig(
 
 class CurrencyConverter:
     def __init__(self):
-        self.rates = JsonHandler().get_latest_rates()
+        self.rates = JsonHandler.get_latest_rates()
         self.input_handler = InputHandler()
 
-    def convert(self, amount, input_curr, output_curr=None):
+    def convert(self, amount: float, input_curr: str, output_curr: str = None):
         """
         Based on parameters provided, the convert method determines
         which method to call to convert entered currencies. If
@@ -38,7 +36,7 @@ class CurrencyConverter:
         else:
             return self.convert_to_output(amount, input_curr, output_curr)
 
-    def convert_to_output(self, amount, input_curr, output_curr):
+    def convert_to_output(self, amount: float, input_curr: str, output_curr: str):
         ans = (
             Decimal(amount)
             / Decimal(self.rates[input_curr])
@@ -48,9 +46,9 @@ class CurrencyConverter:
             "input": {"amount": amount, "currency": input_curr},
             "output": {output_curr: f"{ans:.2f}"},
         }
-        return json.dumps(data, indent=4)
+        return data
 
-    def convert_all_currencies(self, amount, input_curr):
+    def convert_all_currencies(self, amount: float, input_curr: str):
         temp_data = {}
         currencies_list = self.input_handler.get_currencies_list()
         for currency in currencies_list:
@@ -68,11 +66,17 @@ class CurrencyConverter:
             "input": {"amount": amount, "currency": input_curr},
             "output": temp_data,
         }
-        return json.dumps(data, indent=4)
+
+        return data
+
+    @staticmethod
+    def indent_and_print(data: dict):
+        print(json.dumps(data, indent=4))
 
 
 if __name__ == "__main__":
     cc = CurrencyConverter()
     cc.input_handler.args_parser()
     args = cc.input_handler
-    print(cc.convert(args.amount, args.in_currency, args.out_currency))
+    output_data = cc.convert(args.amount, args.in_currency, args.out_currency)
+    cc.indent_and_print(output_data)
