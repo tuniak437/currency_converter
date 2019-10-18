@@ -1,39 +1,42 @@
 import json
 import logging
-import pysnooper
-
 from json_handler import JsonHandler
 from input_handler import InputHandler
-from decimal import *
-from _datetime import datetime
-
-# TODO - handle HTTP requests
-# TODO - documentation
-# TODO - refactor, refactor, refactor
-
-# todo - better naming
+from decimal import Decimal
+import os
 
 logging.basicConfig(
-    filename="C:\\Users\\Tuniak\\PycharmProjects\\currency_converter\\cc.log",
+    filename=os.path.dirname(__file__) + "/cc.log",
     filemode="a",
     level=logging.INFO,
     format=f"%(asctime)s - %(message)s",
-    datefmt='%d-%b-%y %H:%M:%S'
+    datefmt="%d-%b-%y %H:%M:%S",
 )
 
 
 class CurrencyConverter:
     def __init__(self):
-        self.rates = JsonHandler().get_latest_rates()
+        self.rates = JsonHandler.get_latest_rates()
         self.input_handler = InputHandler()
 
-    def convert(self, amount, input_curr, output_curr=None):
-        if output_curr is None:
+    def convert(self, amount: float, input_curr: str, output_curr: str = None):
+        """
+        Based on parameters provided, the convert method determines
+        which method to call to convert entered currencies. If
+        'output_curr' is not provided, method will convert 'input_curr'
+        to every supported currency.
+
+        :param amount: Entered amount of currency user wants to convert
+        :param input_curr: Currency which is already in code format e.g."EUR"
+        :param output_curr: same format as 'input_curr' if provided
+        :return: calculated currencies in JSON format
+        """
+        if output_curr is None or output_curr == "None":
             return self.convert_all_currencies(amount, input_curr)
         else:
             return self.convert_to_output(amount, input_curr, output_curr)
 
-    def convert_to_output(self, amount, input_curr, output_curr):
+    def convert_to_output(self, amount: float, input_curr: str, output_curr: str):
         ans = (
             Decimal(amount)
             / Decimal(self.rates[input_curr])
@@ -43,9 +46,9 @@ class CurrencyConverter:
             "input": {"amount": amount, "currency": input_curr},
             "output": {output_curr: f"{ans:.2f}"},
         }
-        return json.dumps(data, indent=4)
+        return data
 
-    def convert_all_currencies(self, amount, input_curr):
+    def convert_all_currencies(self, amount: float, input_curr: str):
         temp_data = {}
         currencies_list = self.input_handler.get_currencies_list()
         for currency in currencies_list:
@@ -63,17 +66,17 @@ class CurrencyConverter:
             "input": {"amount": amount, "currency": input_curr},
             "output": temp_data,
         }
-        return json.dumps(data, indent=4)
+
+        return data
+
+    @staticmethod
+    def indent_and_print(data: dict):
+        print(json.dumps(data, indent=4))
 
 
 if __name__ == "__main__":
     cc = CurrencyConverter()
     cc.input_handler.args_parser()
-    # todo - figure print method only for CLI app
-    print(
-        cc.convert(
-            cc.input_handler.amount,
-            cc.input_handler.in_currency,
-            cc.input_handler.out_currency,
-        )
-    )
+    args = cc.input_handler
+    output_data = cc.convert(args.amount, args.in_currency, args.out_currency)
+    cc.indent_and_print(output_data)
