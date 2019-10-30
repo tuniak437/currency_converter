@@ -26,7 +26,6 @@ def get_latest_rates():
         .
         }
     }
-
     :return: only "rates" part of the JSON
     """
     with open(os.path.dirname(__file__) + "/rates.json") as json_file:
@@ -63,3 +62,4 @@ def request_and_save_data():
     with open(os.path.dirname(__file__) + "/rates.json", "w") as json_file:
         json.dump(parse_json, json_file)
     logging.info("New rates requested and saved successfully")
+    

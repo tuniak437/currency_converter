@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 
-def convert(amount, input_curr, output_curr=None):
+def convert(amount: float, input_curr: str, output_curr: str = None):
     """
     Based on parameters provided, the convert method determines
     which method to call to convert entered currencies. If
@@ -34,7 +34,7 @@ def convert(amount, input_curr, output_curr=None):
     return convert_to_output(amount, input_curr, output_curr)
 
 
-def convert_to_output(amount, input_curr, output_curr):
+def convert_to_output(amount: float, input_curr: str, output_curr: str):
     ans = (
         Decimal(amount)
         / Decimal(rates[input_curr])
@@ -44,30 +44,34 @@ def convert_to_output(amount, input_curr, output_curr):
         "input": {"amount": amount, "currency": input_curr},
         "output": {output_curr: f"{ans:.2f}"},
     }
-    return json.dumps(data, indent=4)
-    # return data
+
+    return data
 
 
-def convert_all_currencies(amount, input_curr):
-    temp_data = {}
-    currencies_list = input_handler.get_currencies_list()
-    for currency in currencies_list:
-        # skipping iteration of currency we don't need to calculate
-        if input_curr == currency:
-            continue
-        ans = (
-            Decimal(amount)
-            / Decimal(rates[input_curr])
-            * Decimal(rates[currency])
-        )
+def convert_all_currencies(amount: float, input_curr: str):
+      temp_data = {}
+  currencies_list = input_handler.get_currencies_list()
+  for currency in currencies_list:
+      # skipping iteration of currency we don't need to calculate
+      if input_curr == currency:
+          continue
+      ans = (
+          Decimal(amount)
+          / Decimal(rates[input_curr])
+          * Decimal(rates[currency])
+      )
         temp_data.update({currency: f"{ans:.2f}"})
 
     data = {
         "input": {"amount": amount, "currency": input_curr},
         "output": temp_data,
     }
-    # return json.dumps(data, indent=4)
+
     return data
+
+    
+def indent_and_print(data: dict):
+    print(json.dumps(data, indent=4))
 
 
 if __name__ == "__main__":
@@ -75,4 +79,5 @@ if __name__ == "__main__":
     input_handler = InputHandler()
     input_handler.args_parser()
     args = input_handler
-    print(convert(args.amount, args.in_currency, args.out_currency))
+    output_data = convert(args.amount, args.in_currency, args.out_currency)
+    indent_and_print(output_data)

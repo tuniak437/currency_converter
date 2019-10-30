@@ -76,13 +76,14 @@ class InputHandler:
         except ValueError as e:
             logging.error(e)
 
-    def output_validator(self, arg):
+
+    def output_validator(self, arg: str):
         # if parsed argument is empty, API returns str "None"
         if arg is None or arg == "None":
             return None
         return self.find_currency(arg)
 
-    def find_currency(self, arg):
+    def find_currency(self, arg: str):
         # if currency is in list of supported currency codes
         if arg in self.get_currencies_list():
             return arg
