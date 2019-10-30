@@ -56,8 +56,8 @@ def convert_all_currencies(amount: float, input_curr: str):
         if input_curr == currency:
             continue
         ans = (
-              Decimal(amount)
-             / Decimal(rates[input_curr])
+            Decimal(amount)
+            / Decimal(rates[input_curr])
             * Decimal(rates[currency])
         )
         temp_data.update({currency: f"{ans:.2f}"})
