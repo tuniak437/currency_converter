@@ -1,6 +1,6 @@
 import logging
 from flask import Flask, request, jsonify
-from cc import CurrencyConverter
+import cc
 
 app = Flask(__name__)
 
@@ -63,12 +63,11 @@ def currency_converter():
 
     try:
         return parse_parameters(amount, input_curr, output_curr)
-    except SystemExit:
+    except ValueError:
         raise_wrong_input()
 
 
 def parse_parameters(amount: float, input_curr: str, output_curr: str):
-    cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)
     return cc.convert(amount, inp, out)
