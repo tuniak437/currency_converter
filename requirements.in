@@ -1,0 +1,5 @@
+argparse
+flask
+gunicorn
+redis
+requests

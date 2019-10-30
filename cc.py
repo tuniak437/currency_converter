@@ -5,7 +5,6 @@ from input_handler import InputHandler
 from decimal import Decimal
 import os
 
-# TODO - refactor, refactor, refactor
 
 logging.basicConfig(
     filename=os.path.dirname(__file__) + "/cc.log",
@@ -44,7 +43,6 @@ def convert_to_output(amount: float, input_curr: str, output_curr: str):
         "input": {"amount": amount, "currency": input_curr},
         "output": {output_curr: f"{ans:.2f}"},
     }
-
     return data
 
 
@@ -66,7 +64,6 @@ def convert_all_currencies(amount: float, input_curr: str):
         "input": {"amount": amount, "currency": input_curr},
         "output": temp_data,
     }
-
     return data
 
     
@@ -74,9 +71,10 @@ def indent_and_print(data: dict):
     print(json.dumps(data, indent=4))
 
 
+rates = json_handler.get_latest_rates()
+input_handler = InputHandler()
+
 if __name__ == "__main__":
-    rates = json_handler.get_latest_rates()
-    input_handler = InputHandler()
     input_handler.args_parser()
     args = input_handler
     output_data = convert(args.amount, args.in_currency, args.out_currency)
