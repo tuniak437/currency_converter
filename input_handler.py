@@ -70,46 +70,44 @@ class InputHandler:
         )
         args = input_parser.parse_args()
         self.amount = args.amount
-        self.in_currency = self.find_currency(args.input)
-        self.out_currency = self.output_validator(args.output)
+        try:
+            self.in_currency = self.find_currency(args.input)
+            self.out_currency = self.output_validator(args.output)
+        except ValueError as e:
+            logging.error(e)
 
     def output_validator(self, arg):
         # if parsed argument is empty, API returns str "None"
         if arg is None or arg == "None":
             return None
-        else:
-            return self.find_currency(arg)
+        return self.find_currency(arg)
 
     def find_currency(self, arg):
         # if currency is in list of supported currency codes
         if arg in self.get_currencies_list():
             return arg
-        # or in list of supported currency signs
-        elif arg in self.supp_curr.keys():
-            # if currency sign has more than one currency code
-            if len(self.supp_curr[arg]) > 1:
-                inp = input(
-                    f"more currencies under {arg} available, pick one "
-                    f"{list(self.supp_curr[arg])}\n"
-                )
-                if inp.upper() in self.supp_curr[arg]:
-                    return inp.upper()
-                # if user doesn't pick from offered list,
-                # program picks first currency code from the list
-                else:
-                    print(f"Choosing default currency code: {self.supp_curr[arg][0]}")
-                    return self.supp_curr[arg][0]
-            else:
-                return self.supp_curr[arg][0]
-        else:
-            try:
-                raise ValueError(
-                    f"ValueError - Entered currency '{arg}' is not supported."
-                )
-            except ValueError as e:
-                logging.error(e)
-                print(e)
-                sys.exit(1)
+
+        # or not in list of supported currency signs
+        if arg not in self.supp_curr.keys():
+            raise ValueError(
+                f"ValueError - Entered currency '{arg}' is not supported."
+            )
+        # if currency sign has more than one currency code
+        if len(self.supp_curr[arg]) <= 1:
+            return self.supp_curr[arg][0]
+
+        inp = input(
+            f"more currencies under {arg} available, pick one "
+            f"{list(self.supp_curr[arg])}\n"
+        ).upper()
+
+        if inp in self.supp_curr[arg]:
+            return inp
+
+        # if user doesn't pick from offered list,
+        # program picks first currency code from the list
+        print(f"Choosing default currency code: {self.supp_curr[arg][0]}")
+        return self.supp_curr[arg][0]
 
     def get_currencies_list(self):
         currencies_list = []

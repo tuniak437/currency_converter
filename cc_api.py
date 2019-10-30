@@ -1,6 +1,6 @@
 import logging
-from flask import Flask, request
-from cc import CurrencyConverter
+from flask import Flask, request, jsonify
+import cc
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def handle_bad_request(error):
     payload = dict(error.payload or ())
     payload["error_message"] = error.message
     payload["status_code"] = error.status
-    return payload
+    return jsonify(payload), 400
 
 
 def error_handler():
@@ -63,12 +63,11 @@ def currency_converter():
 
     try:
         return parse_parameters(amount, input_curr, output_curr)
-    except SystemExit:
+    except ValueError:
         raise_wrong_input()
 
 
 def parse_parameters(amount, input_curr, output_curr):
-    cc = CurrencyConverter()
     inp = cc.input_handler.find_currency(input_curr)
     out = cc.input_handler.output_validator(output_curr)
     return cc.convert(amount, inp, out)
