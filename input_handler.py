@@ -1,6 +1,5 @@
 import argparse
 import logging
-import sys
 
 
 class InputHandler:
@@ -75,7 +74,6 @@ class InputHandler:
             self.out_currency = self.output_validator(args.output)
         except ValueError as e:
             logging.error(e)
-
 
     def output_validator(self, arg: str):
         # if parsed argument is empty, API returns str "None"
