@@ -49,17 +49,17 @@ def convert_to_output(amount: float, input_curr: str, output_curr: str):
 
 
 def convert_all_currencies(amount: float, input_curr: str):
-      temp_data = {}
-  currencies_list = input_handler.get_currencies_list()
-  for currency in currencies_list:
-      # skipping iteration of currency we don't need to calculate
-      if input_curr == currency:
-          continue
-      ans = (
-          Decimal(amount)
-          / Decimal(rates[input_curr])
-          * Decimal(rates[currency])
-      )
+    temp_data = {}
+    currencies_list = input_handler.get_currencies_list()
+    for currency in currencies_list:
+        # skipping iteration of currency we don't need to calculate
+        if input_curr == currency:
+            continue
+        ans = (
+              Decimal(amount)
+             / Decimal(rates[input_curr])
+            * Decimal(rates[currency])
+        )
         temp_data.update({currency: f"{ans:.2f}"})
 
     data = {
