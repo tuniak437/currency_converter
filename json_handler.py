@@ -13,7 +13,11 @@ def get_latest_rates():
     that fails, program will load the latest rates saved in redis.
     :return: only "rates" part of the JSON
     """
-    rates_json = load_from_redis(r.get("rates"))
+    try:
+        rates_json = load_from_redis(r.get("rates"))
+    except TypeError:
+        rates_json = r.set("rates", save_to_redis())
+
     if rates_json["date"] == str(datetime.today().date()):
         return rates_json["rates"]
     try:
